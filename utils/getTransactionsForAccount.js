@@ -1,17 +1,19 @@
 const { cleanTransactionDataForOwner } = require("./cleanTransactionData");
 
-const getTransactionsForAccount = async ({ tokenAddress, owner, web3 }) => {
+const getTransactionsForAccount = async ({
+  tokenAddress,
+  owner,
+  web3,
+}) => {
   const axios = require("axios");
 
   try {
     const response = await axios.get(
-      `https://api.etherscan.io/api?module=account&action=tokentx&address=${owner}&apikey=${process.env.ETHERSCAN_API_KEY}`
+      `https://api.etherscan.io/api?module=account&action=tokentx&contractaddress=${tokenAddress}&address=${owner}&apikey=${process.env.ETHERSCAN_API_KEY}`
     );
     if (response.data.status === "1") {
       let result = cleanTransactionDataForOwner(
-        response.data.result.filter(
-          (transaction) => transaction.contractAddress === tokenAddress
-        ),
+        response.data.result,
         owner,
         web3
       );
